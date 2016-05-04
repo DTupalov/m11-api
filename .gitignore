@@ -1,0 +1,6 @@
+# IntelliJ project files
+.idea
+node_modules
+npm-debug.log
+
+# Created by .ignore support plugin (hsz.mobi)

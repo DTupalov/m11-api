@@ -7,12 +7,12 @@ const authService = require('../../services/auth');
 auth.post('/', function (req, res, next) {
 
     let options = {
-        login: req.body.login,
+        login   : req.body.login,
         password: req.body.password
     };
-    
+
     authService(options)
-        .then(function(authorize){
+        .then(function (authorize) {
 
             let result = {};
 
@@ -27,7 +27,7 @@ auth.post('/', function (req, res, next) {
             }
 
         })
-        .catch(function(e){
+        .catch(function (e) {
             next(e);
         });
 });

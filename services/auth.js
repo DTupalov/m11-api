@@ -1,8 +1,7 @@
 'use strict';
 
-const express = require('express');
 const request = require('request');
-const https = require('https');
+const isLoggedIn = require('./is_logged_in');
 
 module.exports = function (options) {
 
@@ -22,16 +21,15 @@ module.exports = function (options) {
                 'submit'  : 'Вход'
             }
         }, (error, response, body) => {
-            if (error){
-                reject(error);  
+            if (error) {
+                reject(error);
             }
 
             let PartyURLmatched = [];
             let cookies = [];
             let result = {};
 
-
-            if (response.statusCode === 200 && /rm\/party\/.+$/g.test(response.request.uri.path)) {
+            if (response.statusCode === 200 && isLoggedIn(response)) {
 
                 cookies = cookieJAR.getCookies(response.request.href);
 
@@ -39,8 +37,8 @@ module.exports = function (options) {
                     result[cookie.key] = cookie.value;
                 });
 
-                PartyURLmatched = response.request.uri.path.match(/rm\/party\/(.+)$/g);
-                result.dashboardURL = PartyURLmatched[0];
+                PartyURLmatched = response.request.uri.path.match(/rm\/party\/(.+)$/);
+                result.dashboardURL = PartyURLmatched[1];
                 result.isSuccess = true;
 
             } else {

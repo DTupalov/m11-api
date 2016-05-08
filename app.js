@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/v1/authorize', api.auth);
+app.use('/api/v1/account/authorize', api.auth);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

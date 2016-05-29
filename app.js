@@ -11,6 +11,7 @@ const api = {
     contracts: require('./api/v1/contracts'),
     profile  : require('./api/v1/profile'),
     periods  : require('./api/v1/periods'),
+    services : require('./api/v1/services'),
     transits : require('./api/v1/transits')
 };
 
@@ -33,6 +34,7 @@ app.use('/api/v1/account/balance', api.balance);
 app.use('/api/v1/account/contracts', api.contracts);
 app.use('/api/v1/account/profile', api.profile);
 app.use('/api/v1/account/periods', api.periods);
+app.use('/api/v1/account/services', api.services);
 app.use('/api/v1/transits/search', api.transits);
 
 // catch 404 and forward to error handler

@@ -10,6 +10,7 @@ const api = {
     balance  : require('./api/v1/balance'),
     contracts: require('./api/v1/contracts'),
     profile  : require('./api/v1/profile'),
+    periods  : require('./api/v1/periods'),
     transits : require('./api/v1/transits')
 };
 
@@ -31,6 +32,7 @@ app.use('/api/v1/account/authorize', api.auth);
 app.use('/api/v1/account/balance', api.balance);
 app.use('/api/v1/account/contracts', api.contracts);
 app.use('/api/v1/account/profile', api.profile);
+app.use('/api/v1/account/periods', api.periods);
 app.use('/api/v1/transits/search', api.transits);
 
 // catch 404 and forward to error handler

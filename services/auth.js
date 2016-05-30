@@ -21,13 +21,16 @@ module.exports = function (options) {
                 'submit'  : 'Вход'
             }
         }, (error, response, body) => {
-            if (error) {
-                reject(error);
-            }
-
             let PartyURLmatched = [];
             let cookies = [];
-            let result = {};
+            let result = {
+                isSuccess: false
+            };
+
+            if (error) {
+                resolve(result);
+                return;
+            }
 
             if (response.statusCode === 200 && isLoggedIn(response)) {
 
@@ -41,8 +44,6 @@ module.exports = function (options) {
                 result.dashboardURL = PartyURLmatched[1];
                 result.isSuccess = true;
 
-            } else {
-                result.isSuccess = false;
             }
 
             resolve(result);

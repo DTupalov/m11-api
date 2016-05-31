@@ -1,0 +1,28 @@
+'use strict';
+
+const cheerio = require('cheerio');
+
+module.exports = function (table) {
+    let result = [];
+
+    if (table) {
+        let $ = cheerio.load(table);
+
+        $('.simple').each(function (index, row) {
+            let cells = $(row).find('td');
+            let debit = Number($(cells.get(4)).text().replace(' ', ''));
+
+            if (debit > 0) {
+                result.push({
+                    id     : $(row).attr('data-obj-id'),
+                    date   : $(cells.get(0)).text(),
+                    type   : $(cells.get(1)).text(),
+                    comment: $(cells.get(3)).text(),
+                    price  : debit
+                });
+            }
+        });
+    }
+
+    return result;
+};

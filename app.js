@@ -35,7 +35,7 @@ app.use('/api/v1/account/contracts', api.contracts);
 app.use('/api/v1/account/profile', api.profile);
 app.use('/api/v1/account/periods', api.periods);
 app.use('/api/v1/account/services', api.services);
-app.use('/api/v1/transits/search', api.transits);
+app.use('/api/v1/transits/', api.transits);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

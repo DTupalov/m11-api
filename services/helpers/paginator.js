@@ -27,9 +27,13 @@ module.exports = function (session, parent, type, page) {
                 reject({status: 403});
             }
 
-            body = JSON.parse(body).simple;
+            try {
+                body = JSON.parse(body).simple;
+                resolve(body);
+            } catch (e) {
+                reject({status: 403})
+            }
 
-            resolve(body);
         });
     })
 };

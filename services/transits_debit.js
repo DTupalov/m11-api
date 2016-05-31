@@ -34,6 +34,8 @@ module.exports = function (session, period_id, date_from, date_to) {
                 let transits = [].concat.apply([], transitsByPages);
                 resolve({isSuccess: true, data: transits});
             })
-            .catch(function (e) {});
+            .catch(function (e) {
+                reject({status: 403})
+            });
     })
 };

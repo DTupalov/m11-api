@@ -42,6 +42,8 @@ module.exports = function (session, services, date_from, date_to) {
                 let transits = [].concat.apply([], [].concat.apply([], transitsByPagesByServices));
                 resolve({isSuccess: true, data: transits});
             })
-            .catch(function (e) {});
+            .catch(function (e) {
+                reject({status: 403})
+            });
     })
 };

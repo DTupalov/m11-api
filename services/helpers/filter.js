@@ -40,12 +40,17 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
             }
         }, (error, response, body) => {
 
-            let paginator = JSON.parse(body).paginator;
-            let table = JSON.parse(body).table;
-            let $ = cheerio.load(paginator);
-            let pages = $('.paginator').attr('data-total-pages');
+            try {
+                let paginator = JSON.parse(body).paginator;
+                let table = JSON.parse(body).table;
+                let $ = cheerio.load(paginator);
+                let pages = $('.paginator').attr('data-total-pages');
 
-            resolve({pages, table, parent_id});
+                resolve({pages, table, parent_id});
+            } catch (e) {
+                reject({status: 403})
+            }
+
         });
     })
 };

@@ -12,7 +12,8 @@ const api = {
     profile  : require('./api/v1/profile'),
     periods  : require('./api/v1/periods'),
     services : require('./api/v1/services'),
-    transits : require('./api/v1/transits')
+    transits : require('./api/v1/transits'),
+    news     : require('./api/v1/news')
 };
 
 var app = express();
@@ -42,6 +43,7 @@ app.use('/api/v1/account/profile', api.profile);
 app.use('/api/v1/account/periods', api.periods);
 app.use('/api/v1/account/services', api.services);
 app.use('/api/v1/transits/', api.transits);
+app.use('/api/v1/news/', api.news);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

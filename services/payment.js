@@ -2,6 +2,8 @@
 
 const request = require('request');
 const isLoggedIn = require('./is_logged_in');
+const url = require('url');
+const qs = require('querystring');
 
 module.exports = function (session, amount, contract) {
     return new Promise(function (resolve, reject) {
@@ -26,13 +28,16 @@ module.exports = function (session, amount, contract) {
             }
         }, (error, response, body) => {
 
-            if (!isLoggedIn(response)) {
+            if (!isLoggedIn(response) || error) {
                 result.isSuccess = false;
                 resolve(result);
                 return;
             }
-            
+
+            let urlObject = url.parse(response.headers.location);
+
             result.pay_url = response.headers.location;
+            result.order_id = qs.parse(urlObject.query).mdOrder;
             result.isSuccess = true;
             resolve(result);
         });

@@ -53,7 +53,8 @@ balance.put('/', function (req, res, next) {
     paymentService(session, amount, contract)
         .then(function (payment) {
             let result = {
-                pay_url: payment.pay_url
+                pay_url : payment.pay_url,
+                order_id: payment.order_id
             };
 
             res.json(result);

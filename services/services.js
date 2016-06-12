@@ -36,6 +36,19 @@ module.exports = function (session, period_id, date_from, date_to) {
             })
             .then(function (servicesByPages) {
                 let services = [].concat.apply([], servicesByPages);
+                let uniqServices = {};
+                let resultServices = services.filter((serviceData)=>{
+                    let hash = serviceData.tariff+serviceData.service;
+                    if (!uniqServices[hash]) {
+                        uniqServices[hash] = serviceData.id;
+                    }
+                    return serviceData.quantity === 0 || uniqServices[hash] === serviceData.id;
+                });
+
+                services = [];
+                resultServices.forEach((serviceData)=>{
+                    services.push(serviceData.id);
+                });
 
                 result.isSuccess = true;
                 result.services = services;

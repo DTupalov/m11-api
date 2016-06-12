@@ -8,7 +8,12 @@ module.exports = function (table) {
     if (table) {
         let $ = cheerio.load(table);
         $('.simple').each((index, el) => {
-            result.push($(el).attr('data-obj-id'));
+            result.push({
+                id     : $(el).attr('data-obj-id'),
+                tariff : $($(el).find('td').get(2)).text(),
+                service: $($(el).find('td').get(3)).text(),
+                quantity: parseInt($($(el).find('td').get(6)).text())
+            });
         });
     }
 

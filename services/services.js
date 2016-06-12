@@ -42,7 +42,7 @@ module.exports = function (session, period_id, date_from, date_to) {
                     if (!uniqServices[hash]) {
                         uniqServices[hash] = serviceData.id;
                     }
-                    return serviceData.quantity === 0 || uniqServices[hash] === serviceData.id;
+                    return serviceData.quantity !== 0 && uniqServices[hash] === serviceData.id;
                 });
 
                 services = [];

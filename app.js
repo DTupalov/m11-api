@@ -15,7 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(function (res, req, next) {
-    process.on('uncaughtException', (err) => {
+    process.once('uncaughtException', (err) => {
         next(err);
     });
     next();

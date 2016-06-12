@@ -1,7 +1,6 @@
 'use strict';
 
 const request = require('request');
-const isLoggedIn = require('./is_logged_in');
 const url = require('url');
 const qs = require('querystring');
 
@@ -28,7 +27,7 @@ module.exports = function (session, amount, contract) {
             }
         }, (error, response, body) => {
 
-            if (!isLoggedIn(response) || error) {
+            if (error) {
                 result.isSuccess = false;
                 resolve(result);
                 return;

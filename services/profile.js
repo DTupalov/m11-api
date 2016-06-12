@@ -1,7 +1,6 @@
 'use strict';
 
 const request = require('request');
-const isLoggedIn = require('./is_logged_in');
 const cheerio = require('cheerio');
 
 module.exports = function (session) {
@@ -28,7 +27,7 @@ module.exports = function (session) {
             jar    : cookieJAR
         }, (error, response, body) => {
 
-            if (!isLoggedIn(response)) {
+            if (error) {
                 result.isSuccess = false;
                 resolve(result);
                 return;

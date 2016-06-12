@@ -1,7 +1,6 @@
 'use strict';
 
 const request = require('request');
-const isLoggedIn = require('../is_logged_in');
 const qs = require('querystring');
 
 module.exports = function (session, parent, type, page) {
@@ -23,15 +22,15 @@ module.exports = function (session, parent, type, page) {
             jar   : cookieJAR
         }, (error, response, body) => {
 
-            if (!isLoggedIn(response)) {
-                reject({status: 403});
+            if (error) {
+                reject({status: 500})
             }
 
             try {
                 body = JSON.parse(body).simple;
                 resolve(body);
             } catch (e) {
-                reject({status: 403})
+                reject({status: 500})
             }
 
         });

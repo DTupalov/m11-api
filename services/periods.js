@@ -1,13 +1,16 @@
 'use strict';
 
 const request = require('request');
-const isLoggedIn = require('./is_logged_in');
 const cheerio = require('cheerio');
 const qs = require('querystring');
 
 module.exports = function (session, contract_id) {
     return new Promise(function (resolve, reject) {
 
+        let result = {
+            period_id: '',
+            isSuccess: false
+        };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/');
         cookieJAR.setCookie('onm_session=' + session.onm_session, 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/');
@@ -23,16 +26,13 @@ module.exports = function (session, contract_id) {
             jar    : cookieJAR
         }, (error, response, body) => {
 
-            let result = {
-                period_id: '',
-                isSuccess: false
-            };
+            if (error) {
+                result.isSuccess = false;
+                resolve(result);
+                return;
+            }
 
             body = (JSON.parse(body)).simple;
-
-            if (!isLoggedIn(response)) {
-                reject({status: 403});
-            }
 
             let $ = cheerio.load(body);
             let firstElement = $('[data-obj-id]').get(0);

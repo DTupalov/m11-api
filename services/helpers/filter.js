@@ -5,7 +5,6 @@
 
 const request = require('request');
 const qs = require('querystring');
-const isLoggedIn = require('../is_logged_in');
 const cheerio = require('cheerio');
 
 module.exports = function (session, parent_id, link_id, type, date_from, date_to) {
@@ -39,6 +38,9 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
                 }])
             }
         }, (error, response, body) => {
+            if (error) {
+                reject({status: 500})
+            }
 
             try {
                 let paginator = JSON.parse(body).paginator;
@@ -48,7 +50,7 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
 
                 resolve({pages, table, parent_id});
             } catch (e) {
-                reject({status: 403})
+                reject({status: 500})
             }
 
         });

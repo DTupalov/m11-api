@@ -1,7 +1,13 @@
 'use strict';
 
 const request = require('request');
-const isLoggedIn = require('./is_logged_in');
+const isLoggedIn = function (response) {
+    if (response && typeof response === 'object' && response.hasOwnProperty('body')) {
+        return !(/Забыли пароль\?/g.test(response.body));
+    } else {
+        return false;
+    }
+};
 
 module.exports = function (options) {
 

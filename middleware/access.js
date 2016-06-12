@@ -1,6 +1,6 @@
 'use strict';
 
-const isLoggedIn = require('../services/is_logged_in_middleware');
+const isLoggedIn = require('../services/is_logged_in');
 
 module.exports = function (req, res, next) {
     let session = req.query.session;

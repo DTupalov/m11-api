@@ -7,17 +7,22 @@ module.exports = function (table) {
 
     if (table) {
         let $ = cheerio.load(table);
+        let columnMap = {};
+
+        $('.header').find('th').each((index, row) => {
+            columnMap[$(row).attr('col_name')] = index;
+        });
 
         $('.simple').each(function (index, row) {
             let cells = $(row).find('td');
-            let debit = Number($(cells.get(4)).text().replace(' ', ''));
+            let debit = Number($(cells.get(columnMap['amount_plus'])).text().replace(' ', ''));
 
             if (debit > 0) {
                 result.push({
                     id     : $(row).attr('data-obj-id'),
-                    date   : $(cells.get(0)).text(),
-                    type   : $(cells.get(1)).text(),
-                    comment: $(cells.get(3)).text(),
+                    date   : $(cells.get(columnMap['mdate'])).text(),
+                    type   : $(cells.get(columnMap['ntype_name'])).text(),
+                    comment: $(cells.get(columnMap['remark'])).text(),
                     price  : debit
                 });
             }

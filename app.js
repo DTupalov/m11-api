@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = {
     api: require('./routes/api')
-}
+};
 
 var app = express();
 
@@ -15,9 +15,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(function (res, req, next) {
-    process.once('uncaughtException', (err) => {
+
+    var errorHandler = function (err) {
         next(err);
-    });
+    };
+
+    process.removeListener('uncaughtException', errorHandler);
+    process.once('uncaughtException', errorHandler);
+    process.setMaxListeners(0);
+
     next();
 });
 // uncomment after placing your favicon in /public

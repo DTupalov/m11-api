@@ -2,6 +2,7 @@
 
 const request = require('request');
 const cheerio = require('cheerio');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session) {
     return new Promise(function (resolve, reject) {

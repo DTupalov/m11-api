@@ -28,7 +28,7 @@ module.exports = function (app) {
     //error handlers
     app.use(function (err, req, res, next) {
 
-        if (err instanceof Errors.ParameterRequiredError) {
+        if (err instanceof Errors.ParameterRequiredError || err instanceof RangeError) {
             err.status = 400; // Bad Request
         } else if (err instanceof Errors.NotAuthorized) {
             err.status = 403; // Forbidden

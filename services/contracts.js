@@ -2,13 +2,17 @@
 
 const request = require('request');
 const cheerio = require('cheerio');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session) {
     return new Promise(function (resolve, reject) {
 
+        if (!session || !session.onm_group || !session.onm_session) {
+            reject(new ParameterRequiredError('No session parameters'));
+        }
+
         let result = {
-            "contracts": [],
-            "isSuccess": false
+            "contracts": []
         };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, 'https://private.15-58m11.ru/onyma/payments/sberbank');
@@ -22,21 +26,24 @@ module.exports = function (session) {
         }, (error, response, body) => {
 
             if (error) {
-                result.isSuccess = false;
-                resolve(result);
+                reject(result);
                 return;
             }
 
-            let $ = cheerio.load(body);
-            $('#id_contract > option').each((index, el)=> {
-                result.contracts.push({
-                    id    : $(el).val(),
-                    number: $(el).html()
+            try {
+                let $ = cheerio.load(body);
+                $('#id_contract > option').each((index, el)=> {
+                    result.contracts.push({
+                        id    : $(el).val(),
+                        number: $(el).html()
+                    });
                 });
-            });
 
-            result.isSuccess = true;
-            resolve(result);
+                resolve(result);
+            } catch (e) {
+                reject(e);
+            }
+           
         });
     })
 };

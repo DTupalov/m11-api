@@ -1,35 +1,29 @@
 'use strict';
 
 const express = require('express');
+const ParameterRequiredError = require('../../utils/Error').ParameterRequiredError;
+const NotFoundError = require('../../utils/Error').NotFoundError;
 const contracts = express.Router();
 const contractsService = require('../../services/contracts');
 
 contracts.get('/', function (req, res, next) {
 
-    let session = null;
-    try {
-        session = JSON.parse(new Buffer(req.query.session, 'base64').toString('ascii'));
-    } catch (e) {
-    }
+    let session = req.apiSession;
 
     if (!session) {
-        next({status: 403});
+        next(new ParameterRequiredError());
+        return;
     }
 
     contractsService(session)
-        .then(function (contracts) {
-            let result = [];
+        .then(function (data) {
+            let result;
 
-            if (contracts.isSuccess) {
-                if (Array.isArray(contracts.contracts) && contracts.contracts.length > 0) {
-                    result = contracts.contracts;
-                    res.status(200);
-                    res.json(result);
-                } else {
-                    next({status: 404});
-                }
+            if (Array.isArray(data.contracts) && data.contracts.length > 0) {
+                result = data.contracts;
+                res.json(result);
             } else {
-                next({status: 403});
+                next(new NotFoundError());
             }
         })
         .catch(function (e) {

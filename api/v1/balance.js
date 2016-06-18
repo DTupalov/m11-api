@@ -35,8 +35,11 @@ balance.put('/', function (req, res, next) {
     let contract = req.query.contract;
     let session = req.apiSession;
 
-    if (!session || !contract || !amount || amount < 100) {
+    if (!session || !contract || !amount) {
         next(new ParameterRequiredError());
+        return;
+    } else if (amount < 100) {
+        next(new RangeError('Amount is lower then 100'));
         return;
     }
 

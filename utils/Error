@@ -48,5 +48,21 @@ class NotAuthorized extends ExtendableBuiltin(Error) {
     }
 }
 
+class NotFoundError extends ExtendableBuiltin(Error) {
+    constructor() {
+        super();
+
+        this.name = "NotFound";
+        this.message = "Data is not found";
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error()).stack;
+        }
+    }
+}
+
 module.exports.ParameterRequiredError = ParameterRequiredError;
 module.exports.NotAuthorized = NotAuthorized;
+module.exports.NotFoundError = NotFoundError;

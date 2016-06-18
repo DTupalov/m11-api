@@ -7,9 +7,12 @@ const qs = require('querystring');
 module.exports = function (session, contract_id) {
     return new Promise(function (resolve, reject) {
 
+        if (!session || !session.onm_group || !session.onm_session || !contract_id) {
+            reject(new ParameterRequiredError());
+        }
+
         let result = {
-            period_id: '',
-            isSuccess: false
+            period_id: ''
         };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/');
@@ -27,22 +30,25 @@ module.exports = function (session, contract_id) {
         }, (error, response, body) => {
 
             if (error) {
-                result.isSuccess = false;
-                resolve(result);
+                reject(error);
                 return;
             }
 
-            body = (JSON.parse(body)).simple;
+            try {
+                body = (JSON.parse(body)).simple;
 
-            let $ = cheerio.load(body);
-            let firstElement = $('[data-obj-id]').get(0);
-            let period = $(firstElement).attr('data-obj-id');
-            let periodArray = period.split('.');
+                let $ = cheerio.load(body);
+                let firstElement = $('[data-obj-id]').get(0);
+                let period = $(firstElement).attr('data-obj-id');
+                let periodArray = period.split('.');
 
-            result.period_id = periodArray[2];
-            result.isSuccess = true;
+                result.period_id = periodArray[2];
 
-            resolve(result);
+                resolve(result);
+            } catch (e) {
+                reject(e);
+            }
+
         });
     })
 };

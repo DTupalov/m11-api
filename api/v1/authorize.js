@@ -1,30 +1,33 @@
 'use strict';
 
 const express = require('express');
+const ParameterRequiredError = require('../../utils/Error').ParameterRequiredError;
 const auth = express.Router();
 const authService = require('../../services/auth');
 
 auth.post('/', function (req, res, next) {
 
+    let login = req.body.login;
+    let password = req.body.password;
+
+    if (!login || !password) {
+        next(new ParameterRequiredError('No login or password parameters'));
+        return;
+    }
+
     let options = {
-        login   : req.body.login,
-        password: req.body.password
+        login   : login,
+        password: password
     };
 
     authService(options)
-        .then(function (authorize) {
+        .then(function (data) {
 
-            let result = {};
+            let result = {
+                session: new Buffer(JSON.stringify(data)).toString('base64')
+            };
 
-            if (authorize.isSuccess) {
-                res.status(200);
-                result = {
-                    session: new Buffer(JSON.stringify(authorize)).toString('base64')
-                };
-                res.json(result);
-            } else {
-                next({status: 403});
-            }
+            res.json(result);
 
         })
         .catch(function (e) {

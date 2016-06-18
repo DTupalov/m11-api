@@ -6,10 +6,13 @@ const cheerio = require('cheerio');
 module.exports = function (session) {
     return new Promise(function (resolve, reject) {
 
+        if (!session || !session.onm_group || !session.onm_session) {
+            reject(new ParameterRequiredError('No session parameters'));
+        }
+
         let uri = 'https://private.15-58m11.ru/onyma/system/literpc/';
         let result = {
-            "balance"  : 0.00,
-            "isSuccess": false
+            "balance": 0.00
         };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, uri);
@@ -31,18 +34,23 @@ module.exports = function (session) {
         }, (error, response, body) => {
 
             if (error) {
-                result.isSuccess = false;
-                resolve(result);
+                reject(error);
                 return;
             }
 
-            body = (JSON.parse(body)).result[0].result.result;
-            let $ = cheerio.load(body);
-            let balance = $($('.infoblock .value').get(2)).text();
+            try {
+                body = (JSON.parse(body)).result[0].result.result;
 
-            result.balance = Number(balance);
-            result.isSuccess = true;
-            resolve(result);
+                let $ = cheerio.load(body);
+                let balance = $($('.infoblock .value').get(2)).text();
+
+                result.balance = Number(balance);
+
+                resolve(result);
+            } catch (e) {
+                reject(e);
+            }
+
         });
     })
 };

@@ -1,6 +1,8 @@
 'use strict';
 
 const request = require('request');
+const NotAuthorized = require('../utils/Error').NotAuthorized;
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 const isLoggedIn = function (response) {
     if (response && typeof response === 'object' && response.hasOwnProperty('body')) {
         return !(/Забыли пароль\?/g.test(response.body));
@@ -13,6 +15,13 @@ module.exports = function (options) {
 
     return new Promise(function (resolve, reject) {
 
+        let login = options.login;
+        let password = options.password;
+
+        if (!login || !password) {
+            reject(new ParameterRequiredError('No login or password parameters'));
+        }
+
         let cookieJAR = request.jar();
 
         request({
@@ -22,24 +31,24 @@ module.exports = function (options) {
             followAllRedirects: true,
             jar               : cookieJAR,
             form              : {
-                'login'   : options.login,
-                'password': options.password,
+                'login'   : login,
+                'password': password,
                 'submit'  : 'Вход'
             }
         }, (error, response, body) => {
-            let PartyURLmatched = [];
-            let cookies = [];
-            let result = {
-                isSuccess: false
-            };
+            let PartyURLmatched,
+                cookies,
+                result = {};
 
             if (error) {
-                resolve(result);
+                reject(error);
+                return;
+            } else if (response.statusCode !== 200 || !isLoggedIn(response)) {
+                reject(new NotAuthorized());
                 return;
             }
 
-            if (response.statusCode === 200 && isLoggedIn(response)) {
-
+            try {
                 cookies = cookieJAR.getCookies(response.request.href);
 
                 cookies.forEach((cookie) => {
@@ -48,11 +57,12 @@ module.exports = function (options) {
 
                 PartyURLmatched = response.request.uri.path.match(/rm\/party\/(.+)$/);
                 result.dashboardURL = PartyURLmatched[1];
-                result.isSuccess = true;
 
+                resolve(result);
+            } catch (e) {
+                reject(e);
             }
 
-            resolve(result);
         });
     })
 };

@@ -1,5 +1,5 @@
 'use strict';
-
+const Errors = require('../utils/Error');
 const access = require('../middleware/access');
 const api = {
     auth     : require('../api/v1/authorize'),
@@ -24,5 +24,19 @@ module.exports = function (app) {
     app.use('/api/v1/account/services', api.services);
     app.use('/api/v1/transits/', api.transits);
     app.use('/api/v1/news/', api.news);
+
+    //error handlers
+    app.use(function (err, req, res, next) {
+
+        if (err instanceof Errors.ParameterRequiredError) {
+            err.status = 400; // Bad Request
+        } else if (err instanceof Errors.NotAuthorized) {
+            err.status = 403; // Forbidden
+        } else {
+            err.status = 500;
+        }
+
+        next(err);
+    });
 
 };

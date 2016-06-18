@@ -7,9 +7,12 @@ const qs = require('querystring');
 module.exports = function (session, amount, contract) {
     return new Promise(function (resolve, reject) {
 
+        if (!session || !session.onm_group || !session.onm_session || !amount || amount < 100 || !contract) {
+            reject(new ParameterRequiredError());
+        }
+
         let result = {
-            "pay_url"  : "",
-            "isSuccess": false
+            "pay_url": ""
         };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, 'https://private.15-58m11.ru/onyma/payments/sberbank');
@@ -28,17 +31,20 @@ module.exports = function (session, amount, contract) {
         }, (error, response, body) => {
 
             if (error) {
-                result.isSuccess = false;
-                resolve(result);
+                reject(error);
                 return;
             }
 
-            let urlObject = url.parse(response.headers.location);
+            try {
+                let urlObject = url.parse(response.headers.location);
 
-            result.pay_url = response.headers.location;
-            result.order_id = qs.parse(urlObject.query).mdOrder;
-            result.isSuccess = true;
-            resolve(result);
+                result.pay_url = response.headers.location;
+                result.order_id = qs.parse(urlObject.query).mdOrder;
+                resolve(result);
+            } catch (e) {
+                reject(e);
+            }
+
         });
     })
 };

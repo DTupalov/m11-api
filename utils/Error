@@ -1,0 +1,52 @@
+'use strict';
+
+/**
+ * http://stackoverflow.com/questions/33870684/why-doesnt-instanceof-work-on-instances-of-error-subclasses-under-babel-node
+ *
+ * @param cls
+ * @returns {ExtendableBuiltin}
+ * @constructor
+ */
+function ExtendableBuiltin(cls) {
+    function ExtendableBuiltin() {
+        cls.apply(this, arguments);
+    }
+
+    ExtendableBuiltin.prototype = Object.create(cls.prototype);
+    Object.setPrototypeOf(ExtendableBuiltin, cls);
+
+    return ExtendableBuiltin;
+}
+
+class ParameterRequiredError extends ExtendableBuiltin(Error) {
+    constructor() {
+        super();
+
+        this.name = "ParameterRequiredError";
+        this.message = "No required parameters";
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error()).stack;
+        }
+    }
+}
+
+class NotAuthorized extends ExtendableBuiltin(Error) {
+    constructor() {
+        super();
+
+        this.name = "NotAuthorized";
+        this.message = "User is not authorized";
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error()).stack;
+        }
+    }
+}
+
+module.exports.ParameterRequiredError = ParameterRequiredError;
+module.exports.NotAuthorized = NotAuthorized;

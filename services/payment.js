@@ -3,12 +3,14 @@
 const request = require('request');
 const url = require('url');
 const qs = require('querystring');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, amount, contract) {
     return new Promise(function (resolve, reject) {
 
         if (!session || !session.onm_group || !session.onm_session || !amount || amount < 100 || !contract) {
             reject(new ParameterRequiredError());
+            return;
         }
 
         let result = {

@@ -4,9 +4,15 @@ const PromiseSeries = require('es6-promise-series');
 const filter = require('./helpers/filter');
 const paginator = require('./helpers/paginator');
 const transitList = require('./helpers/transit_list');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, services, date_from, date_to) {
     return new Promise(function (resolve, reject) {
+
+        if (!session || !session.onm_group || !session.onm_session || !Array.isArray(services) || !date_from || !date_to) {
+            reject(new ParameterRequiredError());
+            return;
+        }
 
         let queue = [];
 
@@ -40,10 +46,10 @@ module.exports = function (session, services, date_from, date_to) {
         PromiseSeries(queue)
             .then(function (transitsByPagesByServices) {
                 let transits = [].concat.apply([], [].concat.apply([], transitsByPagesByServices));
-                resolve({isSuccess: true, data: transits});
+                resolve(transits);
             })
             .catch(function (e) {
-                reject({status: 403})
+                reject(e)
             });
     })
 };

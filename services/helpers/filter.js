@@ -13,6 +13,7 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
 
         if (!session || !session.onm_group || !session.onm_session || !parent_id || !link_id || !type || !date_from || !date_to) {
             reject(new ParameterRequiredError());
+            return;
         }
 
         let uri = 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/' + type + '/inline-filter/save/';

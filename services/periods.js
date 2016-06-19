@@ -3,12 +3,14 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const qs = require('querystring');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, contract_id) {
     return new Promise(function (resolve, reject) {
 
         if (!session || !session.onm_group || !session.onm_session || !contract_id) {
             reject(new ParameterRequiredError());
+            return;
         }
 
         let result = {

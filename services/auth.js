@@ -20,6 +20,7 @@ module.exports = function (options) {
 
         if (!login || !password) {
             reject(new ParameterRequiredError('No login or password parameters'));
+            return;
         }
 
         let cookieJAR = request.jar();

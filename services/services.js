@@ -10,6 +10,7 @@ module.exports = function (session, period_id, date_from, date_to) {
 
         if (!session || !session.onm_group || !session.onm_session || !period_id || !date_from || !date_to) {
             reject(new ParameterRequiredError());
+            return;
         }
         
         let result = {

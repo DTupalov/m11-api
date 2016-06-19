@@ -32,6 +32,8 @@ module.exports = function (app) {
             err.status = 400; // Bad Request
         } else if (err instanceof Errors.NotAuthorized) {
             err.status = 403; // Forbidden
+        } else if (err instanceof Errors.NotFoundError) {
+            err.status = 404; // Not Found
         } else {
             err.status = 500;
         }

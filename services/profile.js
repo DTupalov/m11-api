@@ -9,6 +9,7 @@ module.exports = function (session) {
 
         if (!session || !session.onm_group || !session.onm_session) {
             reject(new ParameterRequiredError('No session parameters'));
+            return;
         }
 
         let result = {

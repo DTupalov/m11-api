@@ -53,6 +53,7 @@ module.exports = {
 
             if (!link) {
                 reject(new ParameterRequiredError());
+                return;
             }
 
             let uri = 'http://www.15-58m11.ru' + link;

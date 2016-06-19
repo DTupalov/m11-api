@@ -9,6 +9,7 @@ module.exports = function (session, parent, type, page) {
 
         if (!session || !session.onm_group || !session.onm_session || !parent || !type || !page) {
             reject(new ParameterRequiredError());
+            return;
         }
 
         let uri = 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/' + type;

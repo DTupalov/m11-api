@@ -49,7 +49,7 @@ transits.get('/debit', function (req, res, next) {
     let date_from = req.query.date_from || moment().format('YYYY-MM-01 00:00:00');
     let date_to = req.query.date_to || moment().endOf('month').format('YYYY-MM-DD 23:59:59');
 
-    if (!session || !services) {
+    if (!session || !period_id) {
         next(new ParameterRequiredError());
         return;
     }

@@ -8,7 +8,7 @@ const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 module.exports = function (session, period_id, date_from, date_to) {
     return new Promise(function (resolve, reject) {
 
-        if (!session || !session.onm_group || !session.onm_session || period_id || !date_from || !date_to) {
+        if (!session || !session.onm_group || !session.onm_session || !period_id || !date_from || !date_to) {
             reject(new ParameterRequiredError());
             return;
         }

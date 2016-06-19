@@ -2,9 +2,14 @@
 
 const request = require('request');
 const qs = require('querystring');
+const ParameterRequiredError = require('../../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, parent, type, page) {
     return new Promise(function (resolve, reject) {
+
+        if (!session || !session.onm_group || !session.onm_session || !parent || !type || !page) {
+            reject(new ParameterRequiredError());
+        }
 
         let uri = 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/' + type;
         let cookieJAR = request.jar();
@@ -23,14 +28,15 @@ module.exports = function (session, parent, type, page) {
         }, (error, response, body) => {
 
             if (error) {
-                reject({status: 500})
+                reject(error);
+                return
             }
 
             try {
                 body = JSON.parse(body).simple;
                 resolve(body);
             } catch (e) {
-                reject({status: 500})
+                reject(e);
             }
 
         });

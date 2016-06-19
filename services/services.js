@@ -3,11 +3,16 @@
 const filter = require('./helpers/filter');
 const paginator = require('./helpers/paginator');
 const serviceList = require('./helpers/service_list');
+const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, period_id, date_from, date_to) {
     return new Promise(function (resolve, reject) {
+
+        if (!session || !session.onm_group || !session.onm_session || !period_id || !date_from || !date_to) {
+            reject(new ParameterRequiredError());
+        }
+        
         let result = {
-            isSuccess: false,
             services : []
         };
 
@@ -50,14 +55,12 @@ module.exports = function (session, period_id, date_from, date_to) {
                     services.push(serviceData.id);
                 });
 
-                result.isSuccess = true;
                 result.services = services;
 
                 resolve(result);
             })
-            .catch(function () {
-                result.isSuccess = false;
-                resolve(result);
+            .catch(function (e) {
+                reject(e);
             })
 
     });

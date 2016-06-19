@@ -6,9 +6,14 @@
 const request = require('request');
 const qs = require('querystring');
 const cheerio = require('cheerio');
+const ParameterRequiredError = require('../../utils/Error').ParameterRequiredError;
 
 module.exports = function (session, parent_id, link_id, type, date_from, date_to) {
     return new Promise(function (resolve, reject) {
+
+        if (!session || !session.onm_group || !session.onm_session || !parent_id || !link_id || !type || !date_from || !date_to) {
+            reject(new ParameterRequiredError());
+        }
 
         let uri = 'https://private.15-58m11.ru/onyma/rm/party/bills_summary2/' + type + '/inline-filter/save/';
         let cookieJAR = request.jar();
@@ -39,10 +44,18 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
             }
         }, (error, response, body) => {
             if (error) {
-                reject({status: 500})
+                reject(error);
+                return;
             }
 
             try {
+                let answer = JSON.parse(body);
+
+                if (answer.errors && answer.errors.length > 0) {
+                    reject(new Error(answer.errors));
+                    return;
+                }
+
                 let paginator = JSON.parse(body).paginator;
                 let table = JSON.parse(body).table;
                 let $ = cheerio.load(paginator);
@@ -50,7 +63,7 @@ module.exports = function (session, parent_id, link_id, type, date_from, date_to
 
                 resolve({pages, table, parent_id});
             } catch (e) {
-                reject({status: 500})
+                reject(e)
             }
 
         });

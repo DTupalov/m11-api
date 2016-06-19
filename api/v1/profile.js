@@ -1,23 +1,21 @@
 'use strict';
 
 const express = require('express');
+const ParameterRequiredError = require('../../utils/Error').ParameterRequiredError;
 const profile = express.Router();
 const profileService = require('../../services/profile');
 
 profile.get('/', function (req, res, next) {
 
-    let session = null;
-    try {
-        session = JSON.parse(new Buffer(req.query.session, 'base64').toString('ascii'));
-    } catch (e) {
-    }
+    let session = req.apiSession;
 
     if (!session) {
-        next({status: 403});
+        next(new ParameterRequiredError());
+        return;
     }
 
     profileService(session)
-        .then(function (profile) {
+        .then(function (data) {
             let result = {
                 lastname    : '',
                 middlename  : '',
@@ -28,20 +26,15 @@ profile.get('/', function (req, res, next) {
                 account     : ''
             };
 
-            if (profile.isSuccess) {
-                result.lastname = profile.lastname;
-                result.middlename = profile.middlename;
-                result.firstname = profile.firstname;
-                result.phone_number = profile.phone_number;
-                result.email = profile.email;
-                result.status = profile.status;
-                result.account = profile.account;
+            result.lastname = data.lastname;
+            result.middlename = data.middlename;
+            result.firstname = data.firstname;
+            result.phone_number = data.phone_number;
+            result.email = data.email;
+            result.status = data.status;
+            result.account = data.account;
 
-                res.status(200);
-                res.json(result);
-            } else {
-                next({status: 403});
-            }
+            res.json(result);
         })
         .catch(function (e) {
             next(e);

@@ -18,7 +18,7 @@ module.exports = function (session, services, date_from, date_to) {
 
         services.forEach((serviceId)=> {
             queue.push(function () {
-                return filter(session, serviceId, '3100100000000000000238', 'month_bills2/mdb_traf_d2', date_from, date_to)
+                return filter(session, serviceId, '3100100000000000000553', 'month_bills2/mdb_traf_d2', date_from, date_to)
                     .then(function (params) {
                         let pages = Number(params.pages);
                         let table = params.table;

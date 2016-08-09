@@ -17,6 +17,8 @@ module.exports = function (options) {
 
         let login = options.login;
         let password = options.password;
+        let captcha_id = options.captcha_id;
+        let captcha_text = options.captcha_text;
 
         if (!login || !password) {
             reject(new ParameterRequiredError('No login or password parameters'));
@@ -32,9 +34,11 @@ module.exports = function (options) {
             followAllRedirects: true,
             jar               : cookieJAR,
             form              : {
-                'login'   : login,
-                'password': password,
-                'submit'  : 'Вход'
+                'login'    : login,
+                'password' : password,
+                'captcha_0': captcha_id,
+                'captcha_1': captcha_text,
+                'submit'   : 'Вход'
             }
         }, (error, response, body) => {
             let PartyURLmatched,

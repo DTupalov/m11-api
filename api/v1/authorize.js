@@ -9,6 +9,8 @@ auth.post('/', function (req, res, next) {
 
     let login = req.body.login;
     let password = req.body.password;
+    let captcha_id = req.body.captcha_id;
+    let captcha_text = req.body.captcha_text;
 
     if (!login || !password) {
         next(new ParameterRequiredError('No login or password parameters'));
@@ -16,8 +18,10 @@ auth.post('/', function (req, res, next) {
     }
 
     let options = {
-        login   : login,
-        password: password
+        login       : login,
+        password    : password,
+        captcha_id  : captcha_id,
+        captcha_text: captcha_text
     };
 
     authService(options)

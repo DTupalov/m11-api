@@ -23,7 +23,8 @@ profile.get('/', function (req, res, next) {
                 phone_number: '',
                 email       : '',
                 status      : false,
-                account     : ''
+                account     : '',
+                account_id  : ''
             };
 
             result.lastname = data.lastname;
@@ -33,6 +34,7 @@ profile.get('/', function (req, res, next) {
             result.email = data.email;
             result.status = data.status;
             result.account = data.account;
+            result.account_id = data.account_id;
 
             res.json(result);
         })

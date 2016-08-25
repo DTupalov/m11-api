@@ -19,7 +19,8 @@ module.exports = function (session) {
             phone_number: '',
             email       : '',
             status      : false,
-            account     : ''
+            account     : '',
+            account_id  : ''
         };
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, 'https://private.15-58m11.ru/onyma/rm/party/' + session.dashboardURL);
@@ -41,33 +42,27 @@ module.exports = function (session) {
                 let $ = cheerio.load(body);
                 $('.w-text-ro').each((index, el)=> {
                     switch (index) {
-                        case 0:
-                        {
+                        case 0: {
                             result.lastname = $(el).text();
                             break;
                         }
-                        case 1:
-                        {
+                        case 1: {
                             result.firstname = $(el).text();
                             break;
                         }
-                        case 2:
-                        {
+                        case 2: {
                             result.middlename = $(el).text();
                             break;
                         }
-                        case 4:
-                        {
+                        case 4: {
                             result.phone_number = $(el).text().replace('Телефон: ', '');
                             break;
                         }
-                        case 5:
-                        {
+                        case 5: {
                             result.email = $(el).text().replace('Email: ', '');
                             break;
                         }
-                        case 6:
-                        {
+                        case 6: {
                             result.status = $(el).text() === 'Активный' ? true : false;
                             break;
                         }
@@ -75,6 +70,7 @@ module.exports = function (session) {
                 });
 
                 result.account = $('.infoblock .value').html();
+                result.account_id = $('.control .c-id-toggler').attr('full_id');
 
                 resolve(result);
             } catch (e) {

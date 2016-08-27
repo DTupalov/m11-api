@@ -41,6 +41,7 @@ module.exports = function (session, contract_id) {
                 $('tr.simple').each(function (index, el) {
                     result.push({
                         contract: $($(el).find('td').get(0)).text().replace(' ...',''),
+                        pan_id: $('tr.simple').attr('data-tree-id'),
                         pan: $($(el).find('td').get(1)).text(),
                         plan: $($(el).find('td').get(2)).text(),
                         status: $($(el).find('td').get(3)).text() === 'Активный'

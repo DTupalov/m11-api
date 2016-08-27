@@ -34,7 +34,7 @@ module.exports = function (app) {
 
         if (err instanceof Errors.ParameterRequiredError || err instanceof RangeError) {
             err.status = 400; // Bad Request
-        } else if (err instanceof Errors.NotAuthorized) {
+        } else if (err instanceof Errors.NotAuthorized || err instanceof Errors.PurchaseError) {
             err.status = 403; // Forbidden
         } else if (err instanceof Errors.NotFoundError) {
             err.status = 404; // Not Found

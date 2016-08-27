@@ -63,6 +63,22 @@ class NotFoundError extends ExtendableBuiltin(Error) {
     }
 }
 
+class PurchaseError extends ExtendableBuiltin(Error) {
+    constructor(options) {
+        super(options);
+
+        this.name = "PurchaseError";
+        this.message = options.message || "Error when purchasing";
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error()).stack;
+        }
+    }
+}
+
 module.exports.ParameterRequiredError = ParameterRequiredError;
 module.exports.NotAuthorized = NotAuthorized;
 module.exports.NotFoundError = NotFoundError;
+module.exports.PurchaseError = PurchaseError;

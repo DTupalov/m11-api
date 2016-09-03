@@ -5,16 +5,16 @@ const cheerio = require('cheerio');
 const qs = require('querystring');
 const ParameterRequiredError = require('../utils/Error').ParameterRequiredError;
 
-module.exports = function (session, contract_id) {
+module.exports = function (session, transponder_id, contract_id) {
     return new Promise(function (resolve, reject) {
 
-        if (!session || !session.onm_group || !session.onm_session || !contract_id) {
+        if (!session || !session.onm_group || !session.onm_session || !contract_id || !transponder_id) {
             reject(new ParameterRequiredError('No session parameters'));
             return;
         }
 
-        let result = [];
-        let uri = 'https://private.15-58m11.ru/onyma/rm/party/contract_product/';
+        let result = null;
+        let uri = 'https://private.15-58m11.ru/onyma/rm/party/contract_product/' + transponder_id;
 
         let cookieJAR = request.jar();
         cookieJAR.setCookie('onm_group=' + session.onm_group, uri);
@@ -23,10 +23,15 @@ module.exports = function (session, contract_id) {
         request({
             method: 'GET',
             uri   : uri + '?' + qs.stringify({
+                '__ilink_id_': '100100000000000000616',
+                '__parent_obj__': contract_id,
                 '_contract_id': contract_id,
-                '__ilink_id__': '100100000000000000616',
                 'simple'      : '1'
             }),
+            headers: {
+                'Accept'          : 'application/json, text/javascript, */*; q=0.01',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
             jar   : cookieJAR
         }, (error, response, body) => {
 
@@ -38,16 +43,13 @@ module.exports = function (session, contract_id) {
             try {
                 let $ = cheerio.load(JSON.parse(body).simple);
 
-                $('tr.simple').each(function (index, el) {
-                    result.push({
-                        id      : $('tr.simple').attr('data-obj-id'),
-                        contract: $($(el).find('td').get(0)).text().replace(' ...', ''),
-                        pan_id  : $('tr.simple').attr('data-tree-id'),
-                        pan     : $($(el).find('td').get(1)).text(),
-                        plan    : $($(el).find('td').get(2)).text(),
-                        status  : $($(el).find('td').get(3)).text() === 'Активный'
-                    });
-                });
+                let classTS = $('span[data-column-name="a$3100420000000000000252"] > .w-text-ro').text();
+
+                if (classTS) {
+                    result = {
+                        class: classTS
+                    }
+                }
 
                 resolve(result);
             } catch (e) {

@@ -50,31 +50,39 @@ module.exports = function (session) {
 
                     $(row).find('td').each((index, cell) => {
                         switch (index) {
+                            // Договор
                             case 0: {
                                 abonement.contract = $(cell).text();
                                 break;
                             }
+                            // PAN
                             case 1: {
                                 abonement.pan = $(cell).text();
                                 break;
                             }
-                            case 2: {
+                            // case 2 - это Пользовательское имя, оно не нужно
+                            // Абонемент
+                            case 3: {
                                 abonement.abonement = $(cell).text();
                                 break;
                             }
-                            case 3: {
+                            // Дата начала
+                            case 4: {
                                 abonement.start_date = $(cell).text();
                                 break;
                             }
-                            case 4: {
+                            // Дата окончания
+                            case 5: {
                                 abonement.end_date = $(cell).text();
                                 break;
                             }
-                            case 5: {
+                            // Остаток поездок
+                            case 6: {
                                 abonement.quantity = $(cell).text();
                                 break;
                             }
-                            case 6: {
+                            // Статус
+                            case 7: {
                                 abonement.status = $(cell).text() === 'Активирован';
                                 break;
                             }

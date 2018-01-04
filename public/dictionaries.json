@@ -1,0 +1,37 @@
+{
+	"dayweeks": {
+		"ponedelnik": "Понедельник",
+		"vtornik": "Вторник",
+		"sreda": "Среда",
+		"chetverg": "Четверг",
+		"pjatnitsa": "Пятница",
+		"subbota": "Суббота",
+		"voskresene": "Воскресенье"
+	},
+	"times": {
+		"00000100": "00:00 - 01:00",
+		"01000600": "01:00 - 06:00",
+		"06001000": "06:00 - 10:00",
+		"10001600": "10:00 - 16:00",
+		"16002400": "16:00 - 24:00",
+		"10002400": "10:00 - 24:00",
+		"06001400": "06:00 - 14:00",
+		"14002400": "14:00 - 24:00"
+	},
+	"froms": {
+		"moskvamkadleviybereglihachevskoeshosse": "Москва",
+		"sheremetevo2": "Шереметьево-2",
+		"sheremetevo1": "Шереметьево-1",
+		"zelenograd": "Зеленоград",
+		"moskovskoemaloekoltsoa107": "Бетонка-A107",
+		"solnechnogorskperesecheniesm10": "Солнечногорск"
+	},
+	"tos": {
+		"sheremetevo2": "Шереметьево-2",
+		"sheremetevo1": "Шереметьево-1",
+		"zelenograd": "Зеленоград",
+		"moskovskoemaloekoltsoa107": "Бетонка-A107",
+		"solnechnogorskperesecheniesm10": "Солнечногорск",
+		"moskvamkadleviybereglihachevskoeshosse": "Москва"
+	}
+}

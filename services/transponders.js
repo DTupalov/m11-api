@@ -39,13 +39,17 @@ module.exports = function (session, contract_id) {
                 let $ = cheerio.load(JSON.parse(body).simple);
 
                 $('tr.simple').each(function (index, el) {
+
+                    var contract = $($(el).find('td').get(0)).text();
+                    contract = (contract.match(/\d+/g))[0];
+
                     result.push({
                         id      : $('tr.simple').attr('data-obj-id'),
-                        contract: $($(el).find('td').get(0)).text().replace(' ...', ''),
+                        contract: contract,
                         pan_id  : $('tr.simple').attr('data-tree-id'),
                         pan     : $($(el).find('td').get(1)).text(),
-                        plan    : $($(el).find('td').get(2)).text(),
-                        status  : $($(el).find('td').get(3)).text() === 'Активный'
+                        plan    : $($(el).find('td').get(3)).text(),
+                        status  : $($(el).find('td').get(5)).text() === 'Активный'
                     });
                 });
 
